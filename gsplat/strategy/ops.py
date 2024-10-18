@@ -46,8 +46,8 @@ def _multinomial_sample(weights: Tensor, n: int, replacement: bool = True) -> Te
 
 @torch.no_grad()
 def _update_param_with_optimizer(
-    param_fn: Callable[[str, torch.Tensor, bool], torch.Tensor],
-    optimizer_fn: Callable[[str, torch.Tensor], torch.Tensor],
+    param_fn: Callable[[str, Tensor, bool], Tensor],
+    optimizer_fn: Callable[[str, Tensor], Tensor],
     params: Union[Dict[str, torch.nn.Parameter], torch.nn.ParameterDict],
     optimizers: Dict[str, torch.optim.Optimizer],
     names: Union[List[str], None] = None,
