@@ -61,6 +61,7 @@ def test_strategy():
     render_colors.mean().backward(retain_graph=True)
     strategy.step_post_backward(params, optimizers, state, step=600, info=info, lr=1e-3)
 
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="No CUDA device")
 def test_strategy_requires_grad():
     from gsplat.rendering import rasterization
@@ -82,7 +83,9 @@ def test_strategy_requires_grad():
     ).to(device)
     params["non_trainable_features"].requires_grad = False
     requires_grad_map = {k: v.requires_grad for k, v in params.items()}
-    optimizers = {k: torch.optim.Adam([v], lr=1e-3) for k, v in params.items() if v.requires_grad}
+    optimizers = {
+        k: torch.optim.Adam([v], lr=1e-3) for k, v in params.items() if v.requires_grad
+    }
 
     # A dummy rendering call
     render_colors, render_alphas, info = rasterization(
