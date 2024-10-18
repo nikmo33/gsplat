@@ -67,6 +67,10 @@ def test_strategy_requires_grad():
     from gsplat.rendering import rasterization
     from gsplat.strategy import DefaultStrategy, MCMCStrategy
 
+    def assert_consistent_sizes(params):
+        sizes = [v.shape[0] for v in params.values()]
+        assert all([s == sizes[0] for s in sizes])
+
     torch.manual_seed(42)
 
     # Prepare Gaussians
@@ -111,6 +115,7 @@ def test_strategy_requires_grad():
     for k, v in params.items():
         assert v.requires_grad == requires_grad_map[k]
     assert params["non_trainable_features"].grad is None
+    assert_consistent_sizes(params)
     # Test MCMCStrategy
     strategy = MCMCStrategy(verbose=True)
     strategy.check_sanity(params, optimizers)
@@ -120,6 +125,7 @@ def test_strategy_requires_grad():
     assert params["non_trainable_features"].grad is None
     for k, v in params.items():
         assert v.requires_grad == requires_grad_map[k]
+    assert_consistent_sizes(params)
 
 
 if __name__ == "__main__":
